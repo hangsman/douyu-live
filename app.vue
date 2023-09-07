@@ -17,13 +17,20 @@ import Player, { Events } from 'xgplayer'
 import FlvPlugin from 'xgplayer-flv'
 import "xgplayer/dist/index.min.css"
 
+import Danmu from 'xgplayer/es/plugins/danmu'
+import 'xgplayer/es/plugins/danmu/index.css'
+
 useHead({
   title: "Douyu Live"
 })
 
 const room = ref()
-let player: Player = null!;
-onMounted(() => {
+
+let player: Player = null!
+let ws: any = null!
+let danmu: Danmu = null!
+
+onMounted(async () => {
   player = new Player({
     id: 'player',
     videoInit: false,
@@ -41,6 +48,18 @@ onMounted(() => {
   player.on(Events.DEFINITION_CHANGE, async (value) => {
     play(room.value, value.to.definition)
   })
+  if (process.browser) {
+    const { $danmu } = useNuxtApp()
+
+    player.registerPlugin($danmu, {
+      "closeDefaultBtn": false,
+      "defaultOff": false,
+      "panel": true
+    })
+
+    danmu = player.getPlugin('danmu') as Danmu
+
+  }
 })
 const playLive = async () => {
   if (room.value == null) {
@@ -54,7 +73,9 @@ const playLive = async () => {
 }
 
 const play = async (room: string, rate: number) => {
-
+  if(ws != null){
+    ws.close()
+  }
   if (FlvPlugin.isSupported()) {
     const data = await useFetch(`/api/real`, { params: { room, rate } })
     if (data.data.value == null) {
@@ -69,6 +90,11 @@ const play = async (room: string, rate: number) => {
       },
       autoplay: true
     })
+    const { $douyudm } = useNuxtApp()
+    ws = new $douyudm(room, (data) => {
+      const uniqueString = Date.now().toString(36) + Math.random().toString(36).substr(2);
+      danmu.sendComment({id: uniqueString,duration:5000,txt:data.txt,style:{color:"#ffffff",}})
+    });
     return data
   } else { alert('浏览器不支持！') }
 }
@@ -76,14 +102,15 @@ const play = async (room: string, rate: number) => {
 </script>
 
 <style>
-input{
-  outline:none; 
+input {
+  outline: none;
 }
-.xgplayer .xg-options-list{
+
+.xgplayer .xg-options-list {
   width: auto !important;
-  
 }
-.xgplayer .xg-options-list.active{
+
+.xgplayer .xg-options-list.active {
   display: flex !important;
   flex-direction: column;
 }
@@ -91,7 +118,12 @@ input{
 .xgplayer .xg-options-list li {
   margin: 2px 4px;
 }
-.xgplayer .xg-options-list li span{
+
+.xgplayer .xg-options-list li span {
   white-space: nowrap !important;
+}
+.xgplayer .xgplayer-panel-slider{
+  width: auto !important;
+  height: auto !important;
 }
 </style>

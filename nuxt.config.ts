@@ -6,6 +6,7 @@ export default defineNuxtConfig({
       customElement:true,
     }
   },
+
   modules: [
     '@nuxtjs/tailwindcss'
   ]
