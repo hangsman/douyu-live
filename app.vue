@@ -17,6 +17,10 @@ import Player, { Events } from 'xgplayer'
 import FlvPlugin from 'xgplayer-flv'
 import "xgplayer/dist/index.min.css"
 
+useHead({
+  title: "Douyu Live"
+})
+
 const room = ref()
 let player: Player = null!;
 onMounted(() => {
