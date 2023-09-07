@@ -54,11 +54,11 @@ onMounted(async () => {
     player.registerPlugin($danmu, {
       "closeDefaultBtn": false,
       "defaultOff": false,
-      "panel": true
     })
 
     danmu = player.getPlugin('danmu') as Danmu
-
+    danmu.setFontSize(25, 40)
+    danmu.danmujs.setPlayRate(5000, 2)
   }
 })
 const playLive = async () => {
@@ -73,7 +73,7 @@ const playLive = async () => {
 }
 
 const play = async (room: string, rate: number) => {
-  if(ws != null){
+  if (ws != null) {
     ws.close()
   }
   if (FlvPlugin.isSupported()) {
@@ -93,7 +93,13 @@ const play = async (room: string, rate: number) => {
     const { $douyudm } = useNuxtApp()
     ws = new $douyudm(room, (data) => {
       const uniqueString = Date.now().toString(36) + Math.random().toString(36).substr(2);
-      danmu.sendComment({id: uniqueString,duration:5000,txt:data.txt,style:{color:"#ffffff",}})
+      if (data.type == "chatmsg") {
+        danmu.sendComment({
+          id: uniqueString,
+          txt: data.txt,
+          style: { color: "#ffffff" },
+        })
+      }
     });
     return data
   } else { alert('浏览器不支持！') }
@@ -121,9 +127,5 @@ input {
 
 .xgplayer .xg-options-list li span {
   white-space: nowrap !important;
-}
-.xgplayer .xgplayer-panel-slider{
-  width: auto !important;
-  height: auto !important;
 }
 </style>
