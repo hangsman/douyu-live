@@ -19,6 +19,7 @@
     "douyudm": "^2.1.1",
     "dy-barrage": "^1.0.12",
     "xgplayer": "^3.0.9",
-    "xgplayer-flv": "^3.0.9"
+    "xgplayer-flv": "^3.0.9",
+    "xgplayer-hls": "^3.0.9"
   }
 }

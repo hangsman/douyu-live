@@ -15,6 +15,7 @@
 <script setup lang="ts">
 import Player, { Events } from 'xgplayer'
 import FlvPlugin from 'xgplayer-flv'
+import HlsPlugin from 'xgplayer-hls'
 import "xgplayer/dist/index.min.css"
 
 import Danmu from 'xgplayer/es/plugins/danmu'
@@ -43,7 +44,7 @@ onMounted(async () => {
     videoConfig: {
       isCorsOriginAllowed: true,
     },
-    plugins: [FlvPlugin]
+    plugins: [FlvPlugin,HlsPlugin]
   })
   player.on(Events.DEFINITION_CHANGE, async (value) => {
     play(room.value, value.to.definition)
