@@ -44,7 +44,7 @@ onMounted(async () => {
     videoConfig: {
       isCorsOriginAllowed: true,
     },
-    plugins: [FlvPlugin,HlsPlugin]
+    plugins: [FlvPlugin]
   })
   player.on(Events.DEFINITION_CHANGE, async (value) => {
     play(room.value, value.to.definition)

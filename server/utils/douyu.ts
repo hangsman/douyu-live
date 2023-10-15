@@ -22,7 +22,12 @@ export const getDouyuRoomInfo = async (room: string | number) => {
 }
 
 export const getDouyuRealUrl = async (room: number | string, sign: string, rate: string, cdn: string) => {
-    const data: DouyuData = await $fetch(`https://playweb.douyu.com/lapi/live/getH5Play/${room}?${sign}&cdn=${cdn}&rate=${rate}&ver=Douyu_223090405&iar=0&ive=0&hevc=0&fa=0`, { method: "POST" })
+    const data: DouyuData = await $fetch(`https://playweb.douyu.com/lapi/live/getH5Play/${room}?${sign}&cdn=${cdn}&rate=${rate}&ver=Douyu_223090405&iar=0&ive=0&hevc=0&fa=0`, {
+        method: "POST" ,
+        headers: {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36 Edg/117.0.2045.60"
+        }
+    })
     return data
 }
 
